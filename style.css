@@ -47,3 +47,10 @@ h2{font-size:clamp(33px,3.55vw,48px);line-height:1.14;letter-spacing:-.055em}.se
 .case-fact-time{flex-wrap:wrap;gap:10px}
 .case-fact-time strong{white-space:nowrap}
 .case-fact-time span{max-width:none}
+
+/* Keep employer names readable above the case metrics at every breakpoint. */
+.case-top{align-items:center;gap:12px}
+.case-top>span:first-child{font-size:20px;font-weight:600;line-height:1.2;letter-spacing:.015em}
+.case-top>span:last-child{font-size:10px;line-height:1.2;flex-shrink:0}
+@media(max-width:820px){.case-top>span:first-child{font-size:16px}}
+@media(max-width:620px){.case-top>span:first-child{font-size:20px}}
