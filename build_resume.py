@@ -313,7 +313,7 @@ def html_resume(model):
 <div class="profile"><p class="experience">{e(model['experience'])}</p>{paragraph(model['description'])}
 <p class="companies">{e(' · '.join(model['companies']))}</p></div>
 {''.join(sections)}
-<footer><strong>{e(model['name'])}</strong><p>{contact_links}</p><a href="{e(model['website'], quote=True)}">{e(model['website'])}</a></footer>
+<footer><strong>{e(model['name'])}</strong><p>{contact_links}</p></footer>
 </main></body></html>'''
 
 
@@ -368,7 +368,6 @@ class NumberedCanvas(Canvas):
             self.line(MARGIN, 37, PAGE_WIDTH - MARGIN, 37)
             self.setFillColor(MUTED)
             self.setFont("Onest", 7.5)
-            self.drawString(MARGIN, 23, urlsplit(self.model["website"]).netloc)
             self.drawRightString(PAGE_WIDTH - MARGIN, 23, f"{self._pageNumber} / {page_count}")
             super().showPage()
         super().save()
@@ -441,7 +440,7 @@ def pdf_resume(model, source: Path, destination: Path):
                   plain(model["language"]), plain("Профильное обучение", "expert_title")])
     for item in model["training"]:
         story.append(p(f'<font color="#647167">{escape(item["year"])}</font>  {escape(item["text"])}'))
-    story.extend([Spacer(1, 9), plain("Контакты", "expert_title"), plain(model["name"]), p(contacts), p(website)])
+    story.extend([Spacer(1, 9), plain("Контакты", "expert_title"), plain(model["name"]), p(contacts)])
     document = BaseDocTemplate(str(destination), pagesize=A4, title=f'{model["name"]} — {model["role"]}',
                                author=model["name"], subject=f'Resume source SHA256: {model["source_sha256"]}',
                                leftMargin=MARGIN, rightMargin=MARGIN, topMargin=42, bottomMargin=49,
@@ -465,7 +464,7 @@ def validate_outputs(model, html_path: Path, pdf_path: Path):
     html_text = comparable(html_tree.one(tag="main").text())
     reader = PdfReader(pdf_path)
     page_texts = []
-    footer = re.compile(re.escape(urlsplit(model["website"]).netloc) + r"\s*\n\d+\s*/\s*\d+\s*$")
+    footer = re.compile(r"\n\d+\s*/\s*\d+\s*$")
     for index, page in enumerate(reader.pages):
         text = page.extract_text() or ""
         if index:
